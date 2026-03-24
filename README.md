@@ -1,36 +1,155 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Northstar Market
 
-## Getting Started
+Northstar Market is a production-style MVP for a modern second-hand marketplace built with Next.js App Router, TypeScript, Tailwind CSS, Prisma, PostgreSQL, and Auth.js.
 
-First, run the development server:
+## Stack
+
+- Next.js 16 App Router
+- TypeScript
+- Tailwind CSS
+- shadcn-style UI component structure
+- Prisma + PostgreSQL
+- Auth.js / NextAuth with credentials and Google
+- React Hook Form + Zod
+- Local filesystem upload storage abstraction
+- Vitest unit tests
+
+## Features
+
+- Public homepage, browse, category, listing detail, safety, prohibited items, and how-it-works pages
+- Credentials auth and Google sign-in entrypoint
+- User dashboard for profile, listings, saved items, and messages
+- Listing creation/editing with multi-image upload support
+- Favorites, report flow, seller trust card, and safe meetup guidance
+- Moderation foundations with prohibited-keyword screening
+- Admin dashboard for listings, reports, users, and categories
+- Prisma seed data with realistic marketplace records
+- Docker Compose file for PostgreSQL
+
+## Project Structure
+
+```text
+src/
+  app/
+    api/
+    admin/
+    browse/
+    category/[slug]/
+    dashboard/
+    listing/[slug]/
+  actions/
+  components/
+    admin/
+    dashboard/
+    forms/
+    layout/
+    listing/
+    ui/
+  lib/
+    db/
+    queries/
+    storage/
+  tests/
+prisma/
+  schema.prisma
+  seed.ts
+  migrations/
+```
+
+## Local Setup
+
+1. Copy the env file:
+
+```bash
+cp .env.example .env
+```
+
+2. Start PostgreSQL.
+
+If Docker is available:
+
+```bash
+docker compose up -d
+```
+
+If Docker is not available, create a local PostgreSQL database manually and point `DATABASE_URL` to it.
+
+3. Install dependencies:
+
+```bash
+npm install
+```
+
+4. Generate Prisma client:
+
+```bash
+npx prisma generate
+```
+
+5. Run migrations:
+
+```bash
+npx prisma migrate dev --name init
+```
+
+6. Seed the database:
+
+```bash
+npm run db:seed
+```
+
+7. Start the app:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Demo Seed Accounts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Admin: `admin@northstar.test`
+- User: `ayesha@northstar.test`
+- Password: `Password123!`
 
-## Learn More
+## Verification Commands
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run typecheck
+npm run lint
+npm test
+npm run build
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## What Was Verified In This Environment
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Verified successfully:
 
-## Deploy on Vercel
+- `npx prisma generate`
+- `npm run typecheck`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+- Initial SQL migration file generated at `prisma/migrations/0001_init/migration.sql`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Not executed here because this machine does not have Docker or PostgreSQL installed:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `npx prisma migrate dev --name init`
+- `npm run db:seed`
+- full runtime login/create-listing/message flow against a live database
+
+The codebase, schema, env file, and commands are prepared for those DB-backed steps.
+
+## Deployment Notes
+
+- Set `DATABASE_URL`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, and optional Google OAuth credentials.
+- Replace local upload storage with cloud object storage by swapping the implementation in `src/lib/storage/local-storage.ts`.
+- Keep middleware and server-side auth checks enabled for dashboard/admin routes.
+- Use a managed PostgreSQL instance for production.
+
+## Notes
+
+- Public browse pages only surface approved listings.
+- Listing creation runs Zod validation on the server and keyword-based moderation screening.
+- Messaging blocks self-messaging and enforces participant authorization on conversation APIs.
+- Admin flows are gated by role checks in middleware and server actions.

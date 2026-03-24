@@ -1,65 +1,150 @@
-import Image from "next/image";
+import Link from "next/link";
+import { ArrowRight, BadgeCheck, Shield, Sparkles } from "lucide-react";
 
-export default function Home() {
+import { Container } from "@/components/layout/container";
+import { ListingCard } from "@/components/listing/listing-card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { safeMeetupTips } from "@/lib/constants";
+import { getCategoryTree } from "@/lib/queries/categories";
+import { getHomepageListings } from "@/lib/queries/listings";
+
+export default async function HomePage() {
+  const [categories, listings] = await Promise.all([getCategoryTree(), getHomepageListings()]);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+    <div className="pb-20">
+      <Container className="py-10">
+        <section className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
+          <Card className="overflow-hidden bg-stone-950 text-white">
+            <CardContent className="relative p-8 sm:p-12">
+              <Badge className="mb-6 bg-white/10 text-white">Premium resale, built for trust</Badge>
+              <h1 className="max-w-2xl text-5xl leading-tight font-semibold sm:text-6xl">
+                A better place to buy and sell second-hand items.
+              </h1>
+              <p className="mt-5 max-w-2xl text-lg text-stone-300">
+                Faster listing flow, cleaner browsing, moderation-first trust, and safer buyer-seller conversations.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Button asChild variant="secondary">
+                  <Link href="/browse">Start browsing</Link>
+                </Button>
+                <Button asChild>
+                  <Link href="/dashboard/listings/new">
+                    Sell an item <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </Button>
+              </div>
+              <div className="mt-10 grid gap-4 sm:grid-cols-3">
+                <div className="rounded-3xl bg-white/5 p-4">
+                  <div className="text-3xl font-semibold">10 min</div>
+                  <p className="mt-2 text-sm text-stone-300">Average listing flow for multi-image posts.</p>
+                </div>
+                <div className="rounded-3xl bg-white/5 p-4">
+                  <div className="text-3xl font-semibold">1 feed</div>
+                  <p className="mt-2 text-sm text-stone-300">Search, filters, and category pages stay consistent.</p>
+                </div>
+                <div className="rounded-3xl bg-white/5 p-4">
+                  <div className="text-3xl font-semibold">Safety-first</div>
+                  <p className="mt-2 text-sm text-stone-300">Prohibited item screening and reviewable reports built in.</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          <div className="grid gap-6">
+            <Card>
+              <CardContent className="p-8">
+                <div className="flex items-center gap-3 text-stone-900">
+                  <Shield className="h-5 w-5" />
+                  <div className="font-semibold">Trust signals buyers actually use</div>
+                </div>
+                <ul className="mt-5 space-y-4 text-sm text-stone-600">
+                  <li>Approved listings only appear publicly.</li>
+                  <li>Verified email and account-age badges on seller cards.</li>
+                  <li>Safe meetup guidance embedded on high-intent pages.</li>
+                </ul>
+              </CardContent>
+            </Card>
+            <Card className="bg-gradient-to-br from-amber-100 to-white">
+              <CardContent className="p-8">
+                <div className="flex items-center gap-3 text-stone-900">
+                  <Sparkles className="h-5 w-5" />
+                  <div className="font-semibold">Modern category discovery</div>
+                </div>
+                <div className="mt-5 grid grid-cols-2 gap-3">
+                  {categories.slice(0, 4).map((category) => (
+                    <Link
+                      key={category.id}
+                      href={`/category/${category.slug}`}
+                      className="rounded-3xl border border-white bg-white/80 p-4 text-sm font-medium text-stone-700 transition hover:-translate-y-0.5 hover:text-stone-950"
+                    >
+                      {category.name}
+                    </Link>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+      </Container>
+
+      <Container className="space-y-12">
+        <section>
+          <div className="mb-6 flex items-end justify-between gap-4">
+            <div>
+              <Badge variant="accent">Latest approved listings</Badge>
+              <h2 className="mt-3 text-3xl font-semibold text-stone-950">Fresh finds, not cluttered pages</h2>
+            </div>
+            <Button asChild variant="ghost">
+              <Link href="/browse">See all</Link>
+            </Button>
+          </div>
+          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+            {listings.map((listing) => (
+              <ListingCard key={listing.id} listing={listing} />
+            ))}
+          </div>
+        </section>
+
+        <section className="grid gap-6 lg:grid-cols-[1fr_1fr]">
+          <Card>
+            <CardContent className="p-8">
+              <Badge variant="success">Why this feels safer</Badge>
+              <h2 className="mt-4 text-3xl font-semibold text-stone-950">Built to reduce scams before they spread</h2>
+              <div className="mt-6 grid gap-4">
+                <div className="rounded-3xl bg-stone-50 p-5">
+                  <div className="flex items-center gap-3 font-semibold text-stone-900">
+                    <BadgeCheck className="h-4 w-4" />
+                    Keyword moderation foundation
+                  </div>
+                  <p className="mt-2 text-sm text-stone-600">Flag suspicious titles, tags, and descriptions before approval.</p>
+                </div>
+                <div className="rounded-3xl bg-stone-50 p-5">
+                  <div className="flex items-center gap-3 font-semibold text-stone-900">
+                    <BadgeCheck className="h-4 w-4" />
+                    Admin review queue
+                  </div>
+                  <p className="mt-2 text-sm text-stone-600">Reports and pending listings feed directly into a focused moderation dashboard.</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-8">
+              <Badge variant="warning">Safe meetup tips</Badge>
+              <h2 className="mt-4 text-3xl font-semibold text-stone-950">Helpful reminders at the right moment</h2>
+              <ul className="mt-6 space-y-3 text-sm text-stone-600">
+                {safeMeetupTips.map((tip) => (
+                  <li key={tip} className="rounded-2xl bg-stone-50 px-4 py-3">
+                    {tip}
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+        </section>
+      </Container>
     </div>
   );
 }

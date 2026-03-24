@@ -1,0 +1,35 @@
+:root {
+  --background: #f8f5ef;
+  --foreground: #171717;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background:
+    radial-gradient(circle at top left, rgba(251, 191, 36, 0.18), transparent 28%),
+    radial-gradient(circle at top right, rgba(14, 165, 233, 0.12), transparent 26%),
+    linear-gradient(180deg, #fbfaf7 0%, #f8f5ef 45%, #f2eee6 100%);
+  color: var(--foreground);
+  font-family: Aptos, "Segoe UI Variable", "Trebuchet MS", sans-serif;
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: "Iowan Old Style", "Palatino Linotype", serif;
+  letter-spacing: -0.03em;
+}
+
+a {
+  transition: color 150ms ease;
+}
+
+::selection {
+  background: #1f2937;
+  color: white;
+}
